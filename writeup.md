@@ -47,7 +47,9 @@ The code for this step is contained in the first code cell of the IPython notebo
 
 I start by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
 
-I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: (Please see output in the junypter notebook)
+I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: 
+
+[image7]:  ./output_images/Distortedimage-Undistortedimage.png
 
 ### Pipeline 
 
@@ -127,3 +129,8 @@ My Pipeline goes trough the following steps:
 * Calculate the radius of curvature in pixels for both lane lines `measure_curvature(left_points[1], self.lanes_fit[0], self.lanes_fit[1])`
 * Calculate Position of the car relative to the lane center `car_offset(leftx=left_points[0], rightx=right_points[0], img_shape=combined_warped_image.shape)`
 * Overlay lane information       
+
+
+#### Issues
+The pipeline had some issues to detect lanes correctly when there were shadows on the street. I'm now using the HLS S channel for gradient thresholds and the HLS L Channel for the color channel threshold, since this fits better.
+In total it is now a little unprecise close to the car on bright road situations, but this is still a much better result than before.
